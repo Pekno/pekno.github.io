@@ -1,0 +1,27 @@
+.close-icon {
+    all: unset;
+    cursor: pointer;
+}
+
+.pull-right {
+    position: absolute;
+    top: 0;
+    right: 8px;
+}
+
+.card {
+    width: 45%;
+    min-height: 20vh;
+}
+
+#create-new-group-button {
+    height: 100%;
+}
+
+#form-lock:disabled{
+    opacity: 0.5;
+}
+
+.accordion-item:not(:first-of-type) {
+   border-top: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+}
