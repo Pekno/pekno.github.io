@@ -22,7 +22,7 @@ window.onload = function(){
         lockForm(false);
         document.getElementById('button-start').disabled = true;
     }).catch(error => {
-        console.log(error);
+        logErrror(error);
     })
 
     const municipalityInput = document.getElementById('municipality-input');
@@ -305,7 +305,6 @@ const updateAppointmentBadges = (check) => {
 }
 
 const updateAppointment = (check) => {
-    console.log(check);
     var tableRow = document.getElementById("appointments_" + check.id);
     tableRow.innerHTML = '';
     for (const key in check.appointments) {
@@ -388,9 +387,9 @@ const secureErrorFetch = (uri, contentType = 'application/json') => {
 }
 
 const buildUrl = (alias, reason_id, date, hour, nbr_people) => {
-    reasons = createPayload(reason_id, nbr_people)
-    availability = encodeURI(date + " " + hour)
-    return "https://rendezvousonline.fr/alias/" + alias + "/prendre-rendez-vous?service=Carte%20Nationale%20d%27Identit%C3%A9%20%28CNI%29%20et%20Passeport&reasons=" + reasons + "&availability=" + availability;
+    let reasonsPayload = createPayload(reason_id, nbr_people)
+    let availability = encodeURI(date + " " + hour)
+    return "https://rendezvousonline.fr/alias/" + alias + "/prendre-rendez-vous?service=Carte%20Nationale%20d%27Identit%C3%A9%20%28CNI%29%20et%20Passeport&reasons=" + reasonsPayload + "&availability=" + availability;
 }
 
 const createPayload = (a, b) => {
