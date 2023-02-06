@@ -90,8 +90,9 @@ const init = () => {
 }
 
 const refresh = async (check) => {
+    console.log(check);
     for (const townhall of check.townhalls) {
-        let reason_id = townhall.reasons.find( x => x.search_reason_id === check.search_reason_id);
+        let reason_id = townhall.reasons.find( x => x.search_reason_id == check.search_reason_id);
         if(reason_id){
             let dates = await getRdvList(townhall.id, reason_id.id, check.nbr_people);
             if(dates.length > 0){
@@ -174,16 +175,7 @@ const getRdvList = async (townhall_id, reason_id, nbr_people) => {
     const reason_payload = createPayload(reason_id, nbr_people)
     const path = api_path + "structures/" + townhall_id + "/availabilities/week?session_id=" + session_id + "&reasons=" + reason_payload + "&date=" + today + "&direction=1";
     const dates = [];
-    return fetch(path).then(async response => {
-        const isJson = response.headers.get('content-type')?.includes('application/json');
-        const data = isJson ? await response.json() : null;
-
-        if (!response.ok) {
-            const error = (data && data.message) || response.status;
-            logErrror(error);
-            return Promise.reject(error);
-        }
-
+    return secureErrorFetch(path).then(data => {
         if(!data.message){
             for (const property in data) {
                 let d1 = new Date(data[property].date);
@@ -198,10 +190,7 @@ const getRdvList = async (townhall_id, reason_id, nbr_people) => {
             }
         }
         return dates
-    }).catch(error => {
-        logErrror(error);
-        console.error('There was an error!', error);
-    });
+    })
 }
 
 /* -- INTERFACE -- */
@@ -256,7 +245,7 @@ const bindActionToNewGroup = (id) => {
     // Group size
     const reasonSelect = document.getElementById('reason-select_' + id);
     reasonSelect.addEventListener('change', (event) => {
-        checks[id].search_reason_id = event.target.value ?? 0;
+        checks[id].search_reason_id = parseInt(event.target.value) ?? 0;
     })
     // Group size
     const numberPeople = document.getElementById('number-people_' + id);
