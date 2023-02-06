@@ -90,7 +90,6 @@ const init = () => {
 }
 
 const refresh = async (check) => {
-    console.log(check);
     for (const townhall of check.townhalls) {
         let reason_id = townhall.reasons.find( x => x.search_reason_id == check.search_reason_id);
         if(reason_id){
