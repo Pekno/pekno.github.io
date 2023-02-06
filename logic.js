@@ -92,7 +92,9 @@ const init = () => {
             check.run = setInterval(() => {
                 refresh(check);
             }, 60 * 1000);
-        } )
+        }).catch(error => {
+            logErrror(error);
+        })
     }
 }
 
@@ -100,27 +102,30 @@ const refresh = async (check) => {
     for (const townhall of check.townhalls) {
         let reason_id = townhall.reasons.find( x => x.search_reason_id == check.search_reason_id);
         if(reason_id){
-            let dates = await getRdvList(townhall.id, reason_id.id, check.nbr_people);
-            if(dates.length > 0){
-                for (const date of dates) {
-                    for (const hour of date.hours) {
-                        const url = buildUrl(townhall.alias, reason_id.id, date.date, hour, check.nbr_people)
-                        const asArray = check.appointments[townhall.id];
-                        if(!asArray){
-                            check.appointments[townhall.id] = [];
-                        }
-                        const exist = check.appointments[townhall.id].find(x => x.uri === url);
-                        const d = Date.parse(date.date + "T" + hour);
-                        if(!exist){
-                            check.appointments[townhall.id].push({
-                                date : d,
-                                uri : url
-                            });
-                            audio.play();
+            getRdvList(townhall.id, reason_id.id, check.nbr_people).then(dates => {
+                if(dates.length > 0){
+                    for (const date of dates) {
+                        for (const hour of date.hours) {
+                            const url = buildUrl(townhall.alias, reason_id.id, date.date, hour, check.nbr_people)
+                            const asArray = check.appointments[townhall.id];
+                            if(!asArray){
+                                check.appointments[townhall.id] = [];
+                            }
+                            const exist = check.appointments[townhall.id].find(x => x.uri === url);
+                            const d = Date.parse(date.date + "T" + hour);
+                            if(!exist){
+                                check.appointments[townhall.id].push({
+                                    date : d,
+                                    uri : url
+                                });
+                                audio.play();
+                            }
                         }
                     }
                 }
-            }
+            }).catch(error => {
+                logErrror(error);
+            })
         }
     }
     updateAppointment(check);
@@ -306,6 +311,7 @@ const updateAppointment = (check) => {
         let isFirst = true;
         const appointmentsByTownhall = check.appointments[key];
         let townhall = check.townhalls.find(x => x.id == key);
+        console.log(townhall);
         for (const appointment of appointmentsByTownhall) {
             addAppointment(isFirst, appointmentsByTownhall.length, check.id, townhall.name, appointment.date, appointment.uri);
             isFirst = false;
@@ -376,7 +382,6 @@ const secureErrorFetch = (uri, contentType = 'application/json') => {
         }
         if (!response.ok) {
             const error = (data && data.message) || response.status;
-            logErrror(error);
             return Promise.reject(error);
         }
         return data;
