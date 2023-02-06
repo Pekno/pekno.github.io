@@ -25,3 +25,7 @@
 .accordion-item:not(:first-of-type) {
    border-top: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
 }
+
+output {
+    white-space: nowrap;
+}

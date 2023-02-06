@@ -1,6 +1,5 @@
 const page_nbr = 1;
 const item_per_page = 50;
-const radius = 75;
 const api_path = "https://pro.rendezvousonline.fr/api-web/";
 const session_id = "EhIdBX5SKnJhopq6BWVBFP21XT9y4OewQNgwmhSw";
 const today = new Date().toISOString().slice(0, 10);
@@ -13,6 +12,7 @@ var municipalities = [];
 var selectedMunicipality;
 var maxId = 0;
 var beforeDate;
+var radius = 75;
 
 window.onload = function(){
     getPassportAndCNIService().then(services => {
@@ -74,6 +74,13 @@ window.onload = function(){
         beforeDate = event.target.value;
     })
     beforeDateInput.value = today;
+
+    searchRadius = document.getElementById('search-radius');
+    searchRadius.addEventListener('input', (event) => {
+        radius = event.target.value;
+        changeRadiusValue(radius);
+    })
+    changeRadiusValue(radius);
 };
 
 const init = () => {
@@ -336,6 +343,10 @@ const addAppointment = (isFirst, span, request, name, date, url) => {
     row.appendChild(cell3);
 
     tableRow.appendChild(row);
+}
+
+const changeRadiusValue = (value) => {
+    document.getElementById('search-radius-value').value = value + " Km";
 }
 
 const lockForm = (bool) => {

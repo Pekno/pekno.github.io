@@ -23,6 +23,11 @@
                                 </datalist>
                                 <input id="before-date-input" type="date" class="form-control my-2 mx-1" name="date-field" required/>
                             </div>
+                            <div class="d-flex flex-row"> 
+                                <label for="search-radius" class="form-label px-4">Rayon</label>
+                                <input type="range" class="form-range" id="search-radius" min="25" max="200" step="5" value="75">
+                                <output id="search-radius-value" class="px-4"></output>
+                            </div>
                             <div id="group-holder" class="d-flex flex-row flex-wrap justify-content-center">
                                 <div id="card_-1" class="card my-2 mx-1" style="display: none;">
                                     <button id="delete-group_-1" class="pull-right close-icon"><i class="fa fa-times"></i></button>
