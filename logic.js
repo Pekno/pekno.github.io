@@ -314,7 +314,6 @@ const updateAppointment = (check) => {
         let isFirst = true;
         const appointmentsByTownhall = check.appointments[key];
         let townhall = check.townhalls.find(x => x.id == key);
-        console.log(townhall);
         for (const appointment of appointmentsByTownhall) {
             addAppointment(isFirst, appointmentsByTownhall.length, check.id, townhall.name, appointment.date, appointment.uri);
             isFirst = false;
