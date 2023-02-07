@@ -13,8 +13,10 @@ var selectedMunicipality;
 var maxId = 0;
 var beforeDate;
 var radius = 75;
+var buttonTooltip;
 
 window.onload = function(){
+
     getPassportAndCNIService().then(services => {
         reasons = services;
         // Only create first card when reasons are loaded
@@ -60,6 +62,7 @@ window.onload = function(){
         init();
         lockForm(true);
     })
+    buttonTooltip = new bootstrap.Tooltip(buttonStart.parentElement);
 
     const buttonStop = document.getElementById('button-stop');
     buttonStop.addEventListener('click', (event) => {
@@ -209,7 +212,7 @@ const getRdvList = async (townhall_id, reason_id, nbr_people) => {
 const editLastChecked = () => {
     var lastChecked = document.getElementById("last_checked");
     let now = new Date();
-    lastChecked.innerHTML = "Dérnière mise à jour : " + new Intl.DateTimeFormat('default', {hour: "numeric", minute: "numeric",hour12: false}).format(now);
+    lastChecked.innerHTML = "Dernières demandes auprès des mairies : " + new Intl.DateTimeFormat('default', {hour: "numeric", minute: "numeric",hour12: false}).format(now);
 }
 
 const buildNewGroup = (id) => {
@@ -366,6 +369,7 @@ const lockForm = (bool) => {
     spinner.hidden = !bool;
     buttonStop.disabled = !bool;
     buttonStart.disabled = bool;
+    bool ? buttonTooltip.show() : buttonTooltip.hide();
 }
 
 /* -- UTILS -- */

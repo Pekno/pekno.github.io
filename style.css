@@ -29,3 +29,7 @@
 output {
     white-space: nowrap;
 }
+
+#description {
+    text-align: center;
+}
